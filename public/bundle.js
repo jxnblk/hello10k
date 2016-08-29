@@ -12,6 +12,7 @@ const contrast = require('./contrast')
 const level = require('./level')
 const rgb = require('./rgb')
 const hex = require('./hex')
+const dark = require('./dark')
 
 console.log('hello')
 
@@ -23,8 +24,11 @@ const sx = el => s => {
 
 const log = ({ base, color }) => {
   console.log(
-    hex(base),
-    hex(color)
+    '%c%s%c%s',
+    `padding:4px;color:${rgb(color)};background-color:${rgb(base)}`,
+    ' Aa ',
+    'color:black',
+    ` ${hex(base)} : ${hex(color)}`
   )
 }
 
@@ -33,13 +37,7 @@ const render = () => {
   const color = hello(base)
   const c = Math.round(contrast(base, color) * 100) / 100
 
-  const reverse = {
-    color: rgb(base),
-    backgroundColor: rgb(color)
-  }
-
-  cont.textContent = c
-  lev.textContent = level(c)
+  cont.textContent = `${c} contrast: ${level(c)}`
   colorInput.value = hex(color)
   baseInput.value = hex(base)
 
@@ -47,9 +45,16 @@ const render = () => {
     color: rgb(color),
     backgroundColor: rgb(base)
   })
-  sx(titleA)(reverse)
-  sx(footer)(reverse)
+  sx(titleA)({
+    color: rgb(base),
+    backgroundColor: rgb(color)
+  })
+  sx(footer)({
+    color: rgb(base),
+    backgroundColor: dark(base) ? 'white' : 'black'
+  })
 
+  history.pushState({}, null, `?c=${hex(base).replace(/^#/, '')}`)
   log({ color, base })
 }
 
@@ -61,7 +66,7 @@ colorInput.addEventListener('click', stopProp)
 baseInput.addEventListener('click', stopProp)
 
 
-},{"./bikeshed":1,"./contrast":3,"./hello":4,"./hex":5,"./level":6,"./rgb":7}],3:[function(require,module,exports){
+},{"./bikeshed":1,"./contrast":3,"./dark":4,"./hello":5,"./hex":6,"./level":7,"./rgb":8}],3:[function(require,module,exports){
 
 const srgb = (n) => n / 255
 const lum = ([R, G, B]) => {
@@ -79,6 +84,14 @@ module.exports = (a, b) => {
 
 
 },{}],4:[function(require,module,exports){
+
+module.exports = ([r, g, b]) => {
+	const yiq = (r * 299 + g * 587 + b * 114) / 1000
+	return yiq < 128
+}
+
+
+},{}],5:[function(require,module,exports){
 
 const contrast = require('./contrast')
 const negate = (rgb) => rgb.map(n => 255 - n)
@@ -201,12 +214,12 @@ const resolve = min => base => {
 module.exports = resolve(4)
 
 
-},{"./contrast":3}],5:[function(require,module,exports){
+},{"./contrast":3}],6:[function(require,module,exports){
 
 module.exports = (rgb) => '#' + rgb.map(v => ('0' + v.toString(16)).slice(-2)).join('')
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 module.exports = contrast => {
   if (contrast > 7) {
@@ -221,7 +234,7 @@ module.exports = contrast => {
 }
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 module.exports = ([r, g, b]) => `rgb(${r}, ${g}, ${b})`
 

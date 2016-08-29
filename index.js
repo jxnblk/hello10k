@@ -7,6 +7,7 @@ const querystring = require('querystring')
 const hello = require('./hello')
 const bikeshed = require('./bikeshed')
 const view = require('./view')
+const hexToRgb = require('./hexToRgb')
 
 const bundle = fs.readFileSync(path.join(__dirname, 'public/bundle.js'), 'utf8')
 
@@ -18,7 +19,7 @@ const handleRequest = (req, res) => {
 
   const { query } = url.parse(req.url, true)
 
-  const base = query.c ? '#' + query.c : bikeshed()
+  const base = query.c ? hexToRgb(query.c) : bikeshed()
   const color = hello(base)
 
   res.end('<!DOCTYPE html>' + view({ color, base }))

@@ -7,37 +7,14 @@ const {
   div,
   h1,
   pre,
-  label,
-  input,
   button
 } = require('h0/dist/elements')
 const contrast = require('./contrast')
 const level = require('./level')
 const rgb = require('./rgb')
 const hex = require('./hex')
-
-const css = `
-.loadButton {
-margin:0;
-margin-left:-99999px;
-font-family:inherit;
-font-size:inherit;
-font-weight: bold;
-padding:.5em;
-color:inherit;
-background-color:transparent;
-border-radius:3px;
-border: 1px solid;
--webkit-appearance:none;
--moz-appearance:none;
-appearance:none;
-}
-.loadButton:focus {
-margin-left: 0;
-outline:none;
-box-shadow:0 0 0 2px;
-}
-`
+const dark = require('./dark')
+const css = require('./css')
 
 const a = h('a')({
   style: {
@@ -46,7 +23,7 @@ const a = h('a')({
   }
 })
 
-const lab = label({
+const label = h('label')({
   style: {
     position: 'absolute',
     height: 1,
@@ -56,12 +33,10 @@ const lab = label({
   }
 })
 
-const inp = input({
+const input = h('input')({
   style: {
-    fontFamily: 'inherit',
+    fontFamily: 'Menlo, monospace',
     fontSize: 'inherit',
-    // textAlign: 'center',
-    fontWeight: 'bold',
     boxSizing: 'border-box',
     display: 'block',
     padding: '.5em 0',
@@ -76,16 +51,6 @@ const p = h('p')({
   style: {
     fontSize: 18,
     maxWidth: '40em'
-  }
-})
-
-const flex = div({
-  style: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    paddingTop: '1em',
-    paddingBottom: '1em',
   }
 })
 
@@ -123,6 +88,9 @@ const tweet = div({
 
 const head = h('head')(
   h('meta')({
+    charset: 'utf-8'
+  })(),
+  h('meta')({
     name: 'viewport',
     content: 'width=device-width,initial-scale=1'
   })(),
@@ -159,25 +127,23 @@ const main = (props) => h('main')({
   tweet,
   title(props),
   cont(props),
-  flex(
-    div(
-      lab('Color'),
-      inp({
-        id: 'colorInput',
-        readonly: true,
-        name: 'color',
-        value: hex(props.color)
-      })()
-    ),
-    div(
-      lab('Background Color'),
-      inp({
-        id: 'baseInput',
-        readonly: true,
-        name: 'base',
-        value: hex(props.base)
-      })()
-    )
+  div(
+    label('Color'),
+    input({
+      id: 'colorInput',
+      readonly: true,
+      name: 'color',
+      value: hex(props.color)
+    })()
+  ),
+  div(
+    label('Background Color'),
+    input({
+      id: 'baseInput',
+      readonly: true,
+      name: 'base',
+      value: hex(props.base)
+    })()
   )
 )
 
@@ -213,32 +179,45 @@ const title = ({ color, base }) => h1({
 )
 
 const cont = ({ contrast }) => div({
+  id: 'cont',
   style: {
     fontSize: 48,
     fontWeight: 'bold'
   }
 })(
-  div({ id: 'cont' })(contrast),
-  div({ id: 'lev' })(level(contrast))
+  `${contrast} contrast: ${level(contrast)}`
 )
 
-const footer = ({ color, base }) => h('footer')({
-  id: 'footer',
-  style: {
-    boxSizing: 'border-box',
-    padding: '2em',
-    minHeight: '20vh',
-    color: rgb(base),
-    backgroundColor: rgb(color)
-  }
-})(
-  div(
-    p('Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. Because the human visual system is more sensitive to contrast than absolute luminance, we can perceive the world similarly regardless of the huge changes in illumination over the day or from place to place. The maximum contrast of an image is the contrast ratio or dynamic range.')
-  ),
-  div(
-    a({ href: 'http://jxnblk.com' })('Made by Jxnblk')
+const footer = ({ color, base }) => {
+	const backgroundColor = dark(base) ? 'white' : 'black'
+
+  return h('footer')({
+    id: 'footer',
+    style: {
+      boxSizing: 'border-box',
+      padding: '2em',
+      minHeight: '20vh',
+      color: rgb(base),
+      backgroundColor,
+      transitionProperty: 'color, background-color',
+      transitionDuration: '.2s, .8s',
+      transitionTimingFunction: 'ease-out'
+    }
+  })(
+    div(
+      p('Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. Because the human visual system is more sensitive to contrast than absolute luminance, we can perceive the world similarly regardless of the huge changes in illumination over the day or from place to place. The maximum contrast of an image is the contrast ratio or dynamic range.'),
+      p('Whether you’re over the age of 30, have a cognitive disability, are sitting next to a window, or are using your phone outside in daylight, color contrast is an important part of universal Web accessibility. While visual design trends come and go, sufficiently-contrasted and readable text is a key feature to well-designed websites.'),
+      p('Read more about the color contrast minimum here: ',
+        a({ href: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html' })('Understanding Contrast'),
+        ' and ',
+        a({ href: 'https://www.w3.org/TR/WCAG20/#visual-audio-contrast' })('Web Content Accessibility Guidelines')
+      )
+    ),
+    div(
+      a({ href: 'http://jxnblk.com' })('Made by Jxnblk')
+    )
   )
-)
+}
 
 
 const view = (props) => {
@@ -253,6 +232,7 @@ const view = (props) => {
       })),
       footer(props),
       h('script')({
+        async: true,
         src: '/bundle.js'
       })()
     ))

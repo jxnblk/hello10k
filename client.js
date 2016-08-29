@@ -5,6 +5,7 @@ const contrast = require('./contrast')
 const level = require('./level')
 const rgb = require('./rgb')
 const hex = require('./hex')
+const dark = require('./dark')
 
 console.log('hello')
 
@@ -16,8 +17,11 @@ const sx = el => s => {
 
 const log = ({ base, color }) => {
   console.log(
-    hex(base),
-    hex(color)
+    '%c%s%c%s',
+    `padding:4px;color:${rgb(color)};background-color:${rgb(base)}`,
+    ' Aa ',
+    'color:black',
+    ` ${hex(base)} : ${hex(color)}`
   )
 }
 
@@ -26,13 +30,7 @@ const render = () => {
   const color = hello(base)
   const c = Math.round(contrast(base, color) * 100) / 100
 
-  const reverse = {
-    color: rgb(base),
-    backgroundColor: rgb(color)
-  }
-
-  cont.textContent = c
-  lev.textContent = level(c)
+  cont.textContent = `${c} contrast: ${level(c)}`
   colorInput.value = hex(color)
   baseInput.value = hex(base)
 
@@ -40,9 +38,16 @@ const render = () => {
     color: rgb(color),
     backgroundColor: rgb(base)
   })
-  sx(titleA)(reverse)
-  sx(footer)(reverse)
+  sx(titleA)({
+    color: rgb(base),
+    backgroundColor: rgb(color)
+  })
+  sx(footer)({
+    color: rgb(base),
+    backgroundColor: dark(base) ? 'white' : 'black'
+  })
 
+  history.pushState({}, null, `?c=${hex(base).replace(/^#/, '')}`)
   log({ color, base })
 }
 

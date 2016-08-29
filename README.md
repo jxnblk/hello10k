@@ -14,3 +14,5 @@ footer
 - perf metrics
 - static tweet button
 
+
+- [ ] query params
