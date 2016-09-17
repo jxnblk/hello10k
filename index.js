@@ -16,13 +16,25 @@ const handleRequest = (req, res) => {
     res.end(bundle)
     return
   }
+  if (/favicon/.test(req.url)) {
+    res.end('')
+    // res.end('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==')
+    return
+  }
 
   const { query } = url.parse(req.url, true)
 
   const base = query.c ? hexToRgb(query.c) : bikeshed()
   const color = hello(base)
 
-  res.end('<!DOCTYPE html>' + view({ color, base }))
+  res.end(
+    '<!DOCTYPE html>'
+    + view({
+      color,
+      base,
+      bundle
+    })
+  )
 }
 
 const server = http.createServer(handleRequest)

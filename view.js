@@ -49,41 +49,25 @@ const input = h('input')({
 
 const p = h('p')({
   style: {
-    fontSize: 18,
     maxWidth: '40em'
   }
 })
 
-const loadButton = div({
+const grid = div({
   style: {
-    marginBottom: 16
+    boxSizing: 'border-box',
+    display: 'inline-block',
+    verticalAlign: 'top',
+    width: 448,
+    maxWidth: '100%',
+    padding: 32
   }
-})(
+})
+
+const loadButton = grid(
   h('button')({
     class: 'loadButton',
   })('Change Colors')
-)
-
-const tweet = div({
-  style: {
-    position: 'fixed',
-    top: 0,
-    right: 0,
-    margin: 16
-  }
-})(
-  h('a')({
-    style: {
-      fontSize: 14,
-      display: 'inline-block',
-      padding: '.25em .5em',
-      color: 'white',
-      backgroundColor: 'black',
-      borderRadius: 3,
-      textDecoration: 'none'
-    },
-    href: `https://twitter.com/intent/tweet?text=Hello color: accessible, functional color palette generator&via=jxnblk`
-  })('Tweet')
 )
 
 const head = h('head')(
@@ -116,7 +100,6 @@ const body = ({ color, base }) => h('body')({
 const main = (props) => h('main')({
   style: {
     boxSizing: 'border-box',
-    padding: '2em',
     minHeight: '100vh',
     WebkitUserSelect: 'none',
     MozUserSelect: 'none',
@@ -124,10 +107,9 @@ const main = (props) => h('main')({
   }
 })(
   loadButton,
-  tweet,
   title(props),
   cont(props),
-  div(
+  grid(
     label('Color'),
     input({
       id: 'colorInput',
@@ -136,7 +118,7 @@ const main = (props) => h('main')({
       value: hex(props.color)
     })()
   ),
-  div(
+  grid(
     label('Background Color'),
     input({
       id: 'baseInput',
@@ -144,68 +126,63 @@ const main = (props) => h('main')({
       name: 'base',
       value: hex(props.base)
     })()
-  )
+  ),
+  footer(props)
 )
 
 const title = ({ color, base }) => h1({
   id: 'title',
   style: {
-    fontSize: 'calc(2em + 2vw)',
+    fontSize: '3em',
+    // fontSize: 'calc(2em + 2vw)',
     textTransform: 'uppercase',
     letterSpacing: '.2em',
     display: 'flex',
     flexWrap: 'wrap'
   }
 })(
-  h('div')({
-    id: 'titleA',
-    style: {
-      textAlign: 'center',
-      padding: '.5em',
-      color: rgb(base),
-      backgroundColor: rgb(color),
-      transitionProperty: 'color, background-color',
-      transitionDuration: '.8s, .2s',
-      transitionTimingFunction: 'ease-out'
-    }
-  })('Hello'),
-  h('div')({
-    id: 'titleB',
-    style: {
-      textAlign: 'center',
-      padding: '.5em'
-    }
-  })('Color')
+  grid(
+    h('div')({
+      id: 'titleA',
+      style: {
+        // textAlign: 'center',
+        padding: '.5em',
+        color: rgb(base),
+        backgroundColor: rgb(color),
+        transitionProperty: 'color, background-color',
+        transitionDuration: '.8s, .2s',
+        transitionTimingFunction: 'ease-out'
+      }
+    })('Hello')
+  ),
+  grid(
+    h('div')({
+      id: 'titleB',
+      style: {
+        // textAlign: 'center',
+        paddingTop: '.5em'
+      }
+    })('Color')
+  )
 )
 
 const cont = ({ contrast }) => div({
-  id: 'cont',
   style: {
-    fontSize: 48,
+    fontSize: '2em',
+    // fontSize: 48,
     fontWeight: 'bold'
   }
 })(
-  `${contrast} contrast: ${level(contrast)}`
+  grid({ id: 'cont' })(`${contrast} contrast`),
+  grid({ id: 'lev' })(level(contrast))
 )
 
 const footer = ({ color, base }) => {
-	const backgroundColor = dark(base) ? 'white' : 'black'
-
-  return h('footer')({
-    id: 'footer',
-    style: {
-      boxSizing: 'border-box',
-      padding: '2em',
-      minHeight: '20vh',
-      color: rgb(base),
-      backgroundColor,
-      transitionProperty: 'color, background-color',
-      transitionDuration: '.2s, .8s',
-      transitionTimingFunction: 'ease-out'
-    }
-  })(
-    div(
-      p('Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. Because the human visual system is more sensitive to contrast than absolute luminance, we can perceive the world similarly regardless of the huge changes in illumination over the day or from place to place. The maximum contrast of an image is the contrast ratio or dynamic range.'),
+  return h('footer')({ id: 'footer' })(
+    grid(
+      p('Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. Because the human visual system is more sensitive to contrast than absolute luminance, we can perceive the world similarly regardless of the huge changes in illumination over the day or from place to place. The maximum contrast of an image is the contrast ratio or dynamic range.')
+    ),
+    grid(
       p('Whether you’re over the age of 30, have a cognitive disability, are sitting next to a window, or are using your phone outside in daylight, color contrast is an important part of universal Web accessibility. While visual design trends come and go, sufficiently-contrasted and readable text is a key feature to well-designed websites.'),
       p('Read more about the color contrast minimum here: ',
         a({ href: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html' })('Understanding Contrast'),
@@ -213,15 +190,17 @@ const footer = ({ color, base }) => {
         a({ href: 'https://www.w3.org/TR/WCAG20/#visual-audio-contrast' })('Web Content Accessibility Guidelines')
       )
     ),
-    div(
-      a({ href: 'http://jxnblk.com' })('Made by Jxnblk')
+    grid(
+      p(
+        a({ href: 'http://jxnblk.com' })('Made by Jxnblk')
+      )
     )
   )
 }
 
 
 const view = (props) => {
-  const { color, base } = props
+  const { color, base, bundle } = props
   const cont = Math.floor(contrast(color, base) * 100) / 100
 
   return String(h('html')(
@@ -230,10 +209,8 @@ const view = (props) => {
       main(Object.assign(props, {
         contrast: cont
       })),
-      footer(props),
       h('script')({
-        async: true,
-        src: '/bundle.js'
+        __html: bundle
       })()
     ))
   )

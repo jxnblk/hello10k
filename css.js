@@ -1,5 +1,9 @@
 
 module.exports = `
+*{box-sizing:border-box}
+body{
+font-size:1.125rem;
+}
 .loadButton {
   margin:0;
   margin-left:-99999px;
