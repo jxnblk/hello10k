@@ -6,6 +6,7 @@ const h = require('h0').default
 const {
   div,
   h1,
+  ul,
   pre,
   button
 } = require('h0/dist/elements')
@@ -15,6 +16,8 @@ const rgb = require('./rgb')
 const hex = require('./hex')
 const dark = require('./dark')
 const css = require('./css')
+
+const li = h('li')
 
 const a = h('a')({
   style: {
@@ -108,7 +111,24 @@ const main = (props) => h('main')({
 })(
   loadButton,
   title(props),
-  cont(props),
+  grid(
+    div({
+      id: 'cont',
+      style: {
+        fontSize: '2em',
+        fontWeight: 'bold'
+      }
+    })(`${props.contrast}:1 contrast`)
+  ),
+  grid(
+    div({
+      id: 'lev',
+      style: {
+        fontSize: '2em',
+        fontWeight: 'bold'
+      }
+    })(level(props.contrast))
+  ),
   grid(
     label('Color'),
     input({
@@ -116,9 +136,7 @@ const main = (props) => h('main')({
       readonly: true,
       name: 'color',
       value: hex(props.color)
-    })()
-  ),
-  grid(
+    })(),
     label('Background Color'),
     input({
       id: 'baseInput',
@@ -180,14 +198,20 @@ const cont = ({ contrast }) => div({
 const footer = ({ color, base }) => {
   return h('footer')({ id: 'footer' })(
     grid(
-      p('Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. Because the human visual system is more sensitive to contrast than absolute luminance, we can perceive the world similarly regardless of the huge changes in illumination over the day or from place to place. The maximum contrast of an image is the contrast ratio or dynamic range.')
+      p('This site generates random color pairs that pass a minimum of 4:1 contrast ratio to meet the WCAG’s level AA conformance for large text. Click or refresh the page to generate a new pair. Using URL parameters, you can bookmark or share any pair of colors from this site. To see a history of the color pairs from a session, open the developer console in your browser.')
     ),
     grid(
-      p('Whether you’re over the age of 30, have a cognitive disability, are sitting next to a window, or are using your phone outside in daylight, color contrast is an important part of universal Web accessibility. While visual design trends come and go, sufficiently-contrasted and readable text is a key feature to well-designed websites.'),
-      p('Read more about the color contrast minimum here: ',
-        a({ href: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html' })('Understanding Contrast'),
-        ' and ',
-        a({ href: 'https://www.w3.org/TR/WCAG20/#visual-audio-contrast' })('Web Content Accessibility Guidelines')
+      p('Whether you’re getting older, have a cognitive disability, are sitting next to a window, or are using your phone outside in daylight, color contrast is an essential part of universal Web accessibility. While visual design trends come and go, sufficiently-contrasted and readable text will always be an indication of a thoughtful, well-designed website.')
+    ),
+    grid(
+      p('Read more about the color contrast minimum here: '),
+      ul(
+        li(
+          a({ href: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html' })('Understanding Contrast')
+        ),
+        li(
+          a({ href: 'https://www.w3.org/TR/WCAG20/#visual-audio-contrast' })('Web Content Accessibility Guidelines')
+        )
       )
     ),
     grid(
