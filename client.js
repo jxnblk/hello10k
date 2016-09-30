@@ -53,8 +53,8 @@ const render = () => {
   const color = hello(base)
   const c = Math.round(contrast(base, color) * 100) / 100
 
-  cont.textContent = `${c} contrast`
-  lev.textContent = level(c)
+  ratio.textContent = `${c} contrast`
+  score.textContent = level(c)
   colorInput.value = hex(color)
   baseInput.value = hex(base)
 

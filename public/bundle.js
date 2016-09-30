@@ -54,8 +54,8 @@ const render = () => {
   const color = hello(base)
   const c = Math.round(contrast(base, color) * 100) / 100
 
-  cont.textContent = `${c} contrast`
-  lev.textContent = level(c)
+  ratio.textContent = `${c} contrast`
+  score.textContent = level(c)
   colorInput.value = hex(color)
   baseInput.value = hex(base)
 
@@ -213,7 +213,6 @@ const resolve = min => base => {
   const [h, s, l] = rgbToHsl(neg)
 
   const color = lighten(base)(min)(neg) || darken(base)(min)(neg) || [0, 0, 0]
-  // console.log(iterations, 'iterations')
   return color
 }
 

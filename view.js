@@ -10,8 +10,8 @@ const {
   pre,
   button
 } = require('h0/dist/elements')
-const contrast = require('./contrast')
-const level = require('./level')
+const getContrast = require('./contrast')
+const getLevel = require('./level')
 const rgb = require('./rgb')
 const hex = require('./hex')
 const dark = require('./dark')
@@ -56,18 +56,18 @@ const p = h('p')({
   }
 })
 
-const grid = div({
-  style: {
+const grid = (props = {}) => div(Object.assign(props, {
+  style: Object.assign({
     boxSizing: 'border-box',
     display: 'inline-block',
     verticalAlign: 'top',
-    width: 448,
+    width: 384,
     maxWidth: '100%',
-    padding: 32
-  }
-})
+    padding: 24,
+  }, props.style)
+}))
 
-const loadButton = grid(
+const loadButton = grid()(
   h('button')({
     class: 'loadButton',
   })('Change Colors')
@@ -81,7 +81,7 @@ const head = h('head')(
     name: 'viewport',
     content: 'width=device-width,initial-scale=1'
   })(),
-  h('title')('Hello Color'),
+  h('title')('Hello 10k'),
   h('style')(css)
 )
 
@@ -104,6 +104,7 @@ const main = (props) => h('main')({
   style: {
     boxSizing: 'border-box',
     minHeight: '100vh',
+    padding: 16,
     WebkitUserSelect: 'none',
     MozUserSelect: 'none',
     userSelect: 'none'
@@ -111,25 +112,21 @@ const main = (props) => h('main')({
 })(
   loadButton,
   title(props),
-  grid(
-    div({
-      id: 'cont',
-      style: {
-        fontSize: '2em',
-        fontWeight: 'bold'
-      }
-    })(`${props.contrast}:1 contrast`)
-  ),
-  grid(
-    div({
-      id: 'lev',
-      style: {
-        fontSize: '2em',
-        fontWeight: 'bold'
-      }
-    })(level(props.contrast))
-  ),
-  grid(
+  grid({
+    id: 'ratio',
+    style: {
+      fontSize: '2em',
+      fontWeight: 'bold'
+    }
+  })(`${props.contrast}:1 contrast`),
+  grid({
+    id: 'score',
+    style: {
+      fontSize: '2em',
+      fontWeight: 'bold'
+    }
+  })(getLevel(props.contrast)),
+  grid()(
     label('Color'),
     input({
       id: 'colorInput',
@@ -159,51 +156,36 @@ const title = ({ color, base }) => h1({
     flexWrap: 'wrap'
   }
 })(
-  grid(
-    h('div')({
-      id: 'titleA',
-      style: {
-        // textAlign: 'center',
-        padding: '.5em',
-        color: rgb(base),
-        backgroundColor: rgb(color),
-        transitionProperty: 'color, background-color',
-        transitionDuration: '.8s, .2s',
-        transitionTimingFunction: 'ease-out'
-      }
-    })('Hello')
-  ),
-  grid(
-    h('div')({
-      id: 'titleB',
-      style: {
-        // textAlign: 'center',
-        paddingTop: '.5em'
-      }
-    })('Color')
-  )
-)
-
-const cont = ({ contrast }) => div({
-  style: {
-    fontSize: '2em',
-    // fontSize: 48,
-    fontWeight: 'bold'
-  }
-})(
-  grid({ id: 'cont' })(`${contrast} contrast`),
-  grid({ id: 'lev' })(level(contrast))
+  grid({
+    id: 'titleA',
+    style: {
+      // textAlign: 'center',
+      // padding: '.5em',
+      color: rgb(base),
+      backgroundColor: rgb(color),
+      transitionProperty: 'color, background-color',
+      transitionDuration: '.8s, .2s',
+      transitionTimingFunction: 'ease-out'
+    }
+  })('Hello'),
+  grid({
+    id: 'titleB',
+    style: {
+      // textAlign: 'center',
+      paddingTop: '.5em'
+    }
+  })('Color')
 )
 
 const footer = ({ color, base }) => {
   return h('footer')({ id: 'footer' })(
-    grid(
+    grid()(
       p('This site generates random color pairs that pass a minimum of 4:1 contrast ratio to meet the WCAG’s level AA conformance for large text. Click or refresh the page to generate a new pair. Using URL parameters, you can bookmark or share any pair of colors from this site. To see a history of the color pairs from a session, open the developer console in your browser.')
     ),
-    grid(
+    grid()(
       p('Whether you’re getting older, have a cognitive disability, are sitting next to a window, or are using your phone outside in daylight, color contrast is an essential part of universal Web accessibility. While visual design trends come and go, sufficiently-contrasted and readable text will always be an indication of a thoughtful, well-designed website.')
     ),
-    grid(
+    grid()(
       p('Read more about the color contrast minimum here: '),
       ul(
         li(
@@ -214,9 +196,14 @@ const footer = ({ color, base }) => {
         )
       )
     ),
-    grid(
-      p(
-        a({ href: 'http://jxnblk.com' })('Made by Jxnblk')
+    grid()(
+      ul(
+        li(
+          a({ href: 'https://github.com/jxnblk/hello10k' })('GitHub')
+        ),
+        li(
+          a({ href: 'http://jxnblk.com' })('Made by Jxnblk')
+        )
       )
     )
   )
@@ -225,13 +212,13 @@ const footer = ({ color, base }) => {
 
 const view = (props) => {
   const { color, base, bundle } = props
-  const cont = Math.floor(contrast(color, base) * 100) / 100
+  const contrast = Math.floor(getContrast(color, base) * 100) / 100
 
   return String(h('html')(
     head,
     body(props)(
       main(Object.assign(props, {
-        contrast: cont
+        contrast
       })),
       h('script')({
         __html: bundle
