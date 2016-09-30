@@ -1,8 +1,7 @@
 
 const hello = require('./hello')
 
-const bikeshed = () => [0, 0, 0]
-  .map(n => Math.floor(Math.random() * 255))
+const bikeshed = require('./bikeshed')
 
 const srgb = (n) => n / 255
 const lum = ([R, G, B]) => {
