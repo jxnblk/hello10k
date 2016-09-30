@@ -2,7 +2,7 @@
   "name": "hello10k",
   "private": true,
   "version": "1.0.0",
-  "description": "",
+  "description": "An under-10kB adaptation of Hello Color for 10k Apart",
   "scripts": {
     "postinstall": "mkdir -p public && browserify client.js -o public/bundle.js",
     "start": "node index.js",
