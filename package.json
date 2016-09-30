@@ -1,5 +1,5 @@
 {
-  "name": "small-hello",
+  "name": "hello10k",
   "private": true,
   "version": "1.0.0",
   "description": "",
@@ -11,7 +11,7 @@
   "author": "Brent Jackson",
   "license": "MIT",
   "dependencies": {
-    "h0": "^1.0.0-beta.4",
+    "h0": "^1.0.0",
     "min-document": "^2.18.1",
     "serve-static": "^1.11.1"
   },

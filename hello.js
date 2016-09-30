@@ -113,7 +113,6 @@ const resolve = min => base => {
   const [h, s, l] = rgbToHsl(neg)
 
   const color = lighten(base)(min)(neg) || darken(base)(min)(neg) || [0, 0, 0]
-  // console.log(iterations, 'iterations')
   return color
 }
 
