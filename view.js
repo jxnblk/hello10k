@@ -149,7 +149,6 @@ const title = ({ color, base }) => h1({
   id: 'title',
   style: {
     fontSize: '3em',
-    // fontSize: 'calc(2em + 2vw)',
     textTransform: 'uppercase',
     letterSpacing: '.2em',
     display: 'flex',
@@ -159,8 +158,6 @@ const title = ({ color, base }) => h1({
   grid({
     id: 'titleA',
     style: {
-      // textAlign: 'center',
-      // padding: '.5em',
       color: rgb(base),
       backgroundColor: rgb(color),
       transitionProperty: 'color, background-color',
@@ -169,12 +166,8 @@ const title = ({ color, base }) => h1({
     }
   })('Hello'),
   grid({
-    id: 'titleB',
-    style: {
-      // textAlign: 'center',
-      paddingTop: '.5em'
-    }
-  })('Color')
+    id: 'titleB'
+  })('10k')
 )
 
 const footer = ({ color, base }) => {
